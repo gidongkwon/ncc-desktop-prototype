@@ -103,6 +103,8 @@ new Promise((resolve, reject) => {
         mainRoom = room;
         synced = true;
 
+        remote.getCurrentWindow().setTitle(mainRoom.name);
+
         const lastId = mainRoom.lastMessage.id;
 
         return session.getMsg(mainRoom, lastId - config.initialMessages - 1, lastId);
@@ -236,6 +238,7 @@ function receiveMessage(data) {
             chatElementClass += ' highlight';
             const hasJongseong = ((data.target.charCodeAt(data.target.length - 1)-0xAC00)%28) !== 0;
             chatElement = `<div class='notification'>방 이름이 ${data.target}${hasJongseong?'으':''}로 변경되었습니다</div>`;
+            remote.getCurrentWindow().setTitle(mainRoom.name);
             break;
             
         case 'text':

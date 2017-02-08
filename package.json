@@ -6,8 +6,8 @@
   "scripts": {
     "run": "./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "package-win": "electron-packager . SDBXChat --prune --overwrite --platform=win32 --ignore /settings --ignore .*\\.fla --ignore auth\\.json --out ./build && node copy_settings.js /build/SDBXChat-win32-x64/settings",
-    "package-linux": "electron-packager . SDBXChat --prune --overwrite --platform=linux --ignore /settings --ignore .*\\.fla --ignore auth\\.json --out=./build && node copy_settings.js /build/SDBXChat-linux-x64/settings",
+    "package-win": "electron-packager . ncc-desktop --prune --overwrite --platform=win32 --ignore /settings --ignore .*\\.fla --ignore auth\\.json --out ./build && node copy_settings.js /build/ncc-desktop-win32-x64/settings",
+    "package-linux": "electron-packager . ncc-desktop --prune --overwrite --platform=linux --ignore /settings --ignore .*\\.fla --ignore auth\\.json --out=./build && node copy_settings.js /build/ncc-desktop-linux-x64/settings",
     "package": "npm run package-win && npm run package-linux"
   },
   "keywords": ["naver cafe","chat"],
