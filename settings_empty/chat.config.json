@@ -1,0 +1,8 @@
+{
+    "cafeId":"",
+    "roomId":"",
+    "skin":"dark",
+    "initialMessages": 100, //max
+    "notifyRegExps":[
+    ]
+}
