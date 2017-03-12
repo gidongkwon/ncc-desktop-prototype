@@ -16,7 +16,6 @@
   "dependencies": {
     "electron": "^1.4.14",
     "file-type": "^4.1.0",
-    "mmmagic": "^0.4.5",
     "node-ncc-es6": "^0.3.1",
     "read-chunk": "^2.0.0"
   },
