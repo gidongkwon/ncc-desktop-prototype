@@ -19,17 +19,16 @@
     </head>
     <body>
         <img id="image">
-        <script>            
-            const widthPad = window.outerWidth - window.innerWidth;
-            const heightPad = window.outerHeight - window.innerHeight + 5;
-
+        <script>
             let filePath = document.location.toString().split('src=')[1];
             const imageElement = document.getElementById('image');
 
             imageElement.src = filePath;
 
             imageElement.addEventListener('load', event => {
-                window.resizeTo(event.target.width + widthPad, event.target.height + heightPad);
+                const w = Math.min(Math.max(event.target.naturalWidth + 60, 100), 1280);
+                const h = Math.min(Math.max(event.target.naturalHeight + 90, 100), 720);
+                window.resizeTo(w, h);
             });
 
             imageElement.addEventListener('click', event => {
