@@ -52,14 +52,6 @@ html, body {
     color: #0F74B8;
 }
 
-.chat-item .thumbnail, .chat-item .sticker {
-    filter: drop-shadow(0.4em 0.4em 0.6em #888);
-}
-
-.chat-item .thumbnail:hover {
-    filter: drop-shadow(0.4em 0.9em 0.6em #888);
-}
-
 .chat-item .message a {
     color: #2980B9;
 }
