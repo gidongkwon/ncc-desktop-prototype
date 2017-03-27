@@ -10,11 +10,15 @@
     "package-linux": "electron-packager . ncc-desktop --prune --overwrite --platform=linux --ignore /settings --ignore .*\\.fla --ignore auth\\.json --out=./build && node copy_settings.js /build/ncc-desktop-linux-x64/settings",
     "package": "npm run package-win && npm run package-linux"
   },
-  "keywords": ["naver cafe","chat"],
+  "keywords": [
+    "naver cafe",
+    "chat"
+  ],
   "author": "ludev",
   "license": "MIT",
   "dependencies": {
     "electron": "^1.4.14",
+    "electron-in-page-search": "^1.2.3",
     "file-type": "^4.1.0",
     "node-ncc-es6": "^0.3.1",
     "read-chunk": "^2.0.0"

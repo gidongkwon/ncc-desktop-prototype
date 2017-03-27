@@ -9,6 +9,8 @@ const { remote, ipcRenderer } = require('electron');
 const { dialog } = remote;
 const readChunk = require('read-chunk');
 const fileType = require('file-type');
+const searchInPage = require('electron-in-page-search').default;
+const inPageSearch = searchInPage(remote.getCurrentWebContents());
 
 const config = JSON.parse(fs.readFileSync('./settings/chat.config.json'));
 const user = JSON.parse(fs.readFileSync('./settings/user.json'));
@@ -99,7 +101,7 @@ new Promise((resolve, reject) => {
     })
     .then(() => session.connect())
     .then(() => session.syncRoom(mainRoom)) // force-sync to fetch data of myself
-    .then((room) => {
+    .then(room => {
         mainRoom = room;
         synced = true;
 
@@ -117,12 +119,12 @@ new Promise((resolve, reject) => {
 
         chatContainer.scrollTop = chatContainer.scrollHeight;
     })
-    .catch(err => {
-        console.log(err.stack);
+    .catch(error => {
+        console.error(error.stack);
     });
 
-session.on('error', (error) => {
-    console.log(error);
+session.on('error', error => {
+    console.error(error);
 });
 
 document.body.addEventListener('drop', body_handleFileDrop);
@@ -132,17 +134,21 @@ document.body.addEventListener('dragover', e => {
 });
 input.addEventListener('keydown', sendMessage);
 input.addEventListener('paste', handleImagePaste);
-//chatContainer.addEventListener('scroll', handleChatScroll); // TODO: re-implement 'get previous message' feature after mvc framework adoption
 session.on('message', receiveMessage);
 
 uploadImageButton.addEventListener('click', openUploadDialog);
 
-function window_handleKeyDown(e) {
-    if (e.key == 'F5') {
-        e.preventDefault();
+function window_handleKeyDown(event) {
+    if (event.key == 'F5') {
+        event.preventDefault();
         remote.getCurrentWindow().reload();
-    } else if (e.key == 'F12') {
+    } else if (event.key == 'F12') {
         remote.getCurrentWindow().toggleDevTools();
+    } else if (event.key == 'f' && event.ctrlKey) {
+        if(inPageSearch.opened)
+            inPageSearch.closeSearchWindow();
+        else
+            inPageSearch.openSearchWindow();
     }
 }
 
@@ -219,8 +225,8 @@ function receiveMessage(data) {
     if (isMe)
         chatElementClass += ' me';
 
-    let chatElement = `<div class='profile-picture' style='background-image: url(${image})'></div>
-                       <div class='nickname' user-id='${id}'><span>${nickname}</span></div>
+    let chatElementHTML = `<div class='profile-picture' style='background-image: url(${image})'></div>
+                       <div class='nickname' user-id='${id}' title='${nickname} (${id})'><span>${nickname}</span></div>
                        <span class='colon'>:</span>`;
 
     let imageElement = null;
@@ -228,16 +234,16 @@ function receiveMessage(data) {
     switch (data.type) {
         case 'join':
             chatElementClass += ' highlight';
-            chatElement = `<div class='notification'>${nickname}님이 접속하셨습니다</div>`;
+            chatElementHTML = `<div class='notification'>${nickname}님이 접속하셨습니다</div>`;
             break;
         case 'leave':
             chatElementClass += ' highlight';
-            chatElement = `<div class='notification'>${nickname}님이 퇴장하셨습니다</div>`;
+            chatElementHTML = `<div class='notification'>${nickname}님이 퇴장하셨습니다</div>`;
             break;
         case 'changeName':
             chatElementClass += ' highlight';
             const hasJongseong = ((data.target.charCodeAt(data.target.length - 1)-0xAC00)%28) !== 0;
-            chatElement = `<div class='notification'>방 이름이 ${data.target}${hasJongseong?'으':''}로 변경되었습니다</div>`;
+            chatElementHTML = `<div class='notification'>방 이름이 ${data.target}${hasJongseong?'으':''}로 변경되었습니다</div>`;
             remote.getCurrentWindow().setTitle(mainRoom.name);
             break;
             
@@ -260,13 +266,13 @@ function receiveMessage(data) {
             messageEscaped = escapeHTML(message);
             messageEscapedWithURL = messageEscaped.replace(urlReg, '<a href="$1" target="_blank">$1</a>');
 
-            chatElement += `<div class='message'>${messageEscapedWithURL}\n</div>`
+            chatElementHTML += `<div class='message'>${messageEscapedWithURL}\n</div>`
             
             break;
         case 'image':
             const sizeReg = /(^.*)\?type=ma1280$/m;
 
-            chatElement += `<a href='./image_viewer.html?src=${data.image}' target='_blank'>`;
+            chatElementHTML += `<a href='./image_viewer.html?src=${data.image}' target='_blank'>`;
 
             if (data.thumb === undefined) {
                 data.thumb = data.image + '?type=w128'
@@ -278,7 +284,7 @@ function receiveMessage(data) {
             if (haveToScroll)
                 imageElement.addEventListener('load', handleImageScroll);
 
-            chatElement += imageElement.outerHTML + '</a>'
+            chatElementHTML += imageElement.outerHTML + '</a>'
             break;
         case 'sticker':
             imageElement = new Image();
@@ -287,16 +293,19 @@ function receiveMessage(data) {
             if (haveToScroll)
                 imageElement.addEventListener('load', handleImageScroll);
 
-            chatElement += imageElement.outerHTML;
+            chatElementHTML += imageElement.outerHTML;
             break;
     }
 
-    chatElement = `<div class='${chatElementClass}' messageid=${data.id}>${chatElement}</div>`;
+    chatElement = document.createElement('div');
+    chatElement.className = chatElementClass;
+    chatElement.setAttribute('messageid', data.id);
+    chatElement.innerHTML = chatElementHTML;
 
     if (!remote.getCurrentWindow().isFocused())
         remote.getCurrentWindow().flashFrame(true);
 
-    chatContainer.innerHTML += chatElement;
+    chatContainer.appendChild(chatElement);
 
     if (haveToScroll) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -337,7 +346,6 @@ function body_handleFileDrop(e) {
 }
 
 function openUploadDialog(event) {
-    console.log(event);
     dialog.showOpenDialog(
         remote.getCurrentWindow(),
         {
