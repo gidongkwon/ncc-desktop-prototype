@@ -5,21 +5,21 @@ const url = require('url');
 let win;
 
 function createWindow() {
-    win = new BrowserWindow({width: 480, height: 800, minWidth: 350, minHeight: 350});
+    win = new BrowserWindow({width: 480, height: 800});
 
     win.loadURL(url.format({
-        pathname: path.join(__dirname, '/html/index.html'),
+        pathname: path.join(__dirname, '/html/chat.html'),
         protocol: 'file:',
         slashes: true
     }));
 
-    win.webContents.on('new-window', function(e, url) {
+    win.webContents.on('new-window', (event, url) => {
         // use default electron window as photoviewer
         if (url.includes('phinf.naver.net'))
             return;
 
         // else use browser to open links
-        e.preventDefault();
+        event.preventDefault();
         shell.openExternal(url);
     });
 
@@ -41,11 +41,11 @@ app.on('activate', () => {
     }
 })
 
-app.on('browser-window-focus', (event) => {
+app.on('browser-window-focus', event => {
     win.flashFrame(false);
 })
 
-ipcMain.on('get-clipboard-image', (event) => {
+ipcMain.on('get-clipboard-image', event => {
     let isImage = clipboard.availableFormats().some(value => value.includes('image'));
 
     if (isImage) {
