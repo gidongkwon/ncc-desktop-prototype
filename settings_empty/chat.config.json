@@ -2,7 +2,7 @@
     "cafeId":"",
     "roomId":"",
     "skin":"dark",
-    "initialMessages": 100, //max
+    "initialMessages": 100,
     "notifyRegExps":[
     ]
 }
