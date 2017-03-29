@@ -32,6 +32,10 @@ html, body {
     background-color: #2C3E50;
 }
 
+#upload-image {
+    color: #F4F9FF;
+}
+
 .chat-item.highlight {
     color: #F4F9FF;
     background-color: #263341;
