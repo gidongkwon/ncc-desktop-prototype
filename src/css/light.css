@@ -15,21 +15,29 @@ html, body {
 }
 
 #input-container {
-    background-color: #212D3A;
+    background-color: white;
 }
 
 #input-container textarea {
-    color: white;
-    border-bottom: 1px solid #3C556E;
-    background-color: inherit;
+    color: #111;
+    border-bottom: 1px solid #D4D8D9;
+    background-color: #FAFEFF;
 }
 
 #input-container textarea:focus {
-    border-bottom: 1px solid #507191;
+    border-bottom: 1px solid #3498DB;
 }
 
 #input-container div {
-    background-color: #2C3E50;
+    background-color: white;
+}
+
+#upload-image {
+    color: #34495C;
+}
+
+#input-container svg {
+    fill: #888 !important;
 }
 
 .chat-item.highlight {
