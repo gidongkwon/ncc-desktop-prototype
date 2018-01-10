@@ -1,6 +1,6 @@
 # ncc-desktop-prototype
 
-[node-ncc-es6](https://github.com/yoo2001818/node-ncc-es6)와 [electron](https://github.com/electron/electron)으로 만든 무진장 느린 네이버 카페 채팅 데스크탑 클라이언트 프로토타입입니다.
+[node-ncc-es6](https://github.com/yoo2001818/node-ncc-es6)와 [electron](https://github.com/electron/electron)으로 만든 단일 방 전용 네이버 카페 채팅 데스크탑 클라이언트 프로토타입입니다.
 
 ## 스크립트
 - `npm run package`: Windows, Linux 64비트용 바이너리를 패키징합니다. 패키징 한 후 settings_empty 폴더를 각각의 디렉토리에 넣는 `copy_settings` 스크립트를 실행합니다.
