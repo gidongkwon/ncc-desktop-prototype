@@ -24,6 +24,7 @@ input[type=text], input[type=password], button, input[type=button], input[type=r
     -webkit-text-size-adjust: none;
     border-radius: 0;
     font-family: inherit;
+    border: none;
 }
 
 #container {
@@ -109,12 +110,11 @@ input[type=text], input[type=password], button, input[type=button], input[type=r
     height: 1rem;
     background-size: cover;
     border-radius: 1rem;
-    margin-left: -1rem;
 }
 
 .chat-item .nickname {
     flex: none;
-    width: 8rem;
+    width: 7rem;
     font-weight: bold;
     text-align: right;
     margin-right: 0.5rem;
